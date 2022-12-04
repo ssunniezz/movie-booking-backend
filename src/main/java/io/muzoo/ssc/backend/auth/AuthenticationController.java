@@ -26,11 +26,6 @@ public class AuthenticationController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/api/test")
-    public String test() {
-        return "If this message is shown, it means login is successful because we didn't set to permit this path";
-    }
-
     @GetMapping("/api/getUser")
     public Iterator<User> getUser() {
         return userRepository.findAll().iterator();
