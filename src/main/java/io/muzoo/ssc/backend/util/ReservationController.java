@@ -9,7 +9,6 @@ import io.muzoo.ssc.backend.repository.SeatRepository;
 import io.muzoo.ssc.backend.repository.SeatReservedRepository;
 import io.muzoo.ssc.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -146,11 +145,28 @@ public class ReservationController {
             List<SeatReserved> list = List.copyOf(screening.getSeatReservedList());
             for (SeatReserved seat: list) {
                 seat.setScreening(null);
-                seat.setUser(null);
             }
             return list;
         } catch (Exception e) {
             return new ArrayList<>();
         }
+    }
+
+    @PostMapping("/api/getMySeatsListByUsername")
+    public List<SeatReserved> getMySeatsList(HttpServletRequest request) {
+        User user = userRepository.findByUsername(request.getParameter("username"));
+
+        if (user == null) {
+            return null;
+        }
+
+        user.getSeatReservedList().sort(new Comparator<SeatReserved>() {
+            @Override
+            public int compare(SeatReserved o1, SeatReserved o2) {
+                return o1.getScreening().getId().compareTo(o2.getScreening().getId());
+            }
+        });
+
+        return user.getSeatReservedList();
     }
 }

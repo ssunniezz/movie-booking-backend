@@ -32,7 +32,7 @@ public class SeatReserved {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
+    @JsonIgnore
     private User user;
 
     @ManyToOne

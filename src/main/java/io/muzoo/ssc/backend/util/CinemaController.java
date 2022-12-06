@@ -6,6 +6,7 @@ import io.muzoo.ssc.backend.Screening;
 import io.muzoo.ssc.backend.Seat;
 import io.muzoo.ssc.backend.repository.AuditoriumRepository;
 import io.muzoo.ssc.backend.repository.MovieRepository;
+import io.muzoo.ssc.backend.repository.ScreeningRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,10 @@ public class CinemaController {
     MovieRepository movieRepository;
     @Autowired
     AuditoriumRepository auditoriumRepository;
+
+    @Autowired
+    ScreeningRepository screeningRepository;
+
     @PostMapping("/api/addMovie")
     public ResponseDTO addMovie(HttpServletRequest request) {
         try {
@@ -150,6 +155,16 @@ public class CinemaController {
         }
 
         return auditorium;
+    }
+
+    @PostMapping("/api/getAuditoriumByScreeningId")
+    public Auditorium getAuditoriumsByScreeningId(HttpServletRequest request) {
+        Screening screening = screeningRepository.findScreeningById(Long.parseLong(request.getParameter("id")));
+
+        if (screening == null) {
+            return null;
+        }
+        return screening.getAuditorium();
     }
 
     @PostMapping("/api/link")
